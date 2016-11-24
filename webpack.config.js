@@ -67,10 +67,10 @@ var config = {
   devServer: {
     hot: true,
     inline: true,
-    stats: { colors: true },
-    proxy: {
-      '*': 'http://localhost:9000'
-    }
+    stats: { colors: true }
+//    proxy: {
+//      '*': 'http://localhost:9000'
+//    }
   }
 }
 
@@ -98,8 +98,13 @@ if (process.env.NODE_ENV === 'production') {
   config.plugins.push(new webpack.optimize.DedupePlugin())
 } else {
   config.devtool = 'source-map'
-  config.module.rules.push({ test: /\.scss$/, loaders: ['style', 'css?sourceMap', 'postcss', 'sass?sourceMap'] })
+  config.module.rules.push({ test: /\.scss$/, loaders: ['style', 'css?sourceMap', 'postcss', 'sass?sourceMap', 'stylefmt?config=.stylelintrc'] })
   config.plugins.push(new ForkCheckerPlugin())
+  config.plugins.push(new StyleLintPlugin({
+    context: 'src/main/sass',
+    files: '**.scss',
+    syntax: 'scss'
+  }))
 }
 
 module.exports = config
